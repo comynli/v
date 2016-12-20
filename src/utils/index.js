@@ -1,18 +1,21 @@
 export {createRequestTypes, action} from './action';
 export {publish} from './reducer';
 export {request} from './request';
+import {ROOT} from './reducer';
 
-export function subscribe(ns, mapping) {
+export function subscribe(mapping, selectors = undefined) {
     return state => {
-        let _state = state;
-        for (let prop of ns.split('.')) {
-            _state = _state[prop];
-        }
         const ret = {};
         Object.entries(mapping).forEach(it => {
             const [name, key] = it;
-            ret[name] = _state[key];
+            ret[name] = state[ROOT][key];
         });
+        if (selectors) {
+            Object.entries(selectors).forEach(it => {
+                const [name, key] = it;
+                ret[name] = state[key];
+            });
+        }
         return ret;
     };
 }

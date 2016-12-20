@@ -5,7 +5,7 @@ import { browserHistory } from 'react-router';
 import createSagaMiddleware, {END} from 'redux-saga';
 import DevTools from '../containers/DevTools';
 
-export default function configure(initialState, reducer) {
+export default function configure(initialState, reducer, ...middleware) {
     const sagaMiddleware = createSagaMiddleware();
 
     const store = createStore(
@@ -15,7 +15,8 @@ export default function configure(initialState, reducer) {
             applyMiddleware(
                 sagaMiddleware,
                 createLogger(),
-                routerMiddleware(browserHistory)
+                routerMiddleware(browserHistory),
+                ...middleware
             ),
             DevTools.instrument()
         )

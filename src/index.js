@@ -30,10 +30,12 @@ function message(state = emptyMessage, action) {
 }
 
 export default class Application {
-    constructor(name, initialState) {
+    constructor(initialState = {}, ...middleware) {
         this._modules = new Map();
         this._routes = [];
-        this._store = configure(initialState, createReducer(name, initialState, {message, routing: routerReducer}));
+        this._store = configure(initialState,
+            createReducer(initialState, {message, routing: routerReducer}),
+            ...middleware);
     }
 
     get store() {
